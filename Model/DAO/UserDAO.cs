@@ -1,4 +1,5 @@
 ﻿using Model.EF;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,11 @@ namespace Model.DAO
             db.Users.Add(entity);
             db.SaveChanges();
             return entity.ID;
+        }
+
+        public IEnumerable<User> ListAll(int page, int pageSize)
+        {
+            return db.Users.OrderBy(x=>x.CreatedDate).ToPagedList(page,pageSize);
         }
         public User GetByID(string userName)
         {
