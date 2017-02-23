@@ -24,6 +24,31 @@ namespace Model.DAO
             return entity.ID;
         }
 
+        public bool Update(User entity)
+        {
+            try
+            {
+                var user = db.Users.Find(entity.ID);
+                user.Name = entity.Name;
+                if(!string.IsNullOrEmpty(entity.Password))
+                {
+                    user.Password = entity.Password;
+                }
+                user.Address = entity.Address;
+                user.Email = entity.Email;
+                user.ModifiedBy = entity.ModifiedBy;
+                user.ModifiedDate = DateTime.Now;
+
+                db.SaveChanges();
+
+                return true;
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+        }
+
         public IEnumerable<User> ListAll(int page, int pageSize)
         {
             return db.Users.OrderBy(x=>x.CreatedDate).ToPagedList(page,pageSize);
@@ -31,6 +56,11 @@ namespace Model.DAO
         public User GetByID(string userName)
         {
             return db.Users.SingleOrDefault(x=>x.UserName == userName);
+        }
+
+        public User ViewById(int id)
+        {
+            return db.Users.Find(id);
         }
         public int Login (string userName, string passWord)
         {

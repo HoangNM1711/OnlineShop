@@ -47,5 +47,38 @@ namespace OnlineShop.Areas.Admin.Controllers
             }
             return View("Index");
         }
+
+        [HttpGet]
+        public ActionResult Edit (int id)
+        {
+            var user = new UserDAO().ViewById(id);
+            return View(user);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(User user)
+        {
+            if (ModelState.IsValid)
+            {
+                var dao = new UserDAO();
+                if(string.IsNullOrEmpty(user.Password))
+                {
+                    var encryptor = Encryptor.MD5Hash(user.Password);
+                    user.Password = encryptor;
+                }
+
+                var result = dao.Update(user);
+                if (result)
+                {
+                    return RedirectToAction("Index", "User");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Cập nhật không thành công");
+                }
+
+            }
+            return View("Index");
+        }
     }
 }
