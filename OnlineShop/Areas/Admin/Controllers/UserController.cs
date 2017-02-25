@@ -80,5 +80,11 @@ namespace OnlineShop.Areas.Admin.Controllers
             }
             return View("Index");
         }
+        public ActionResult Delete(int id)
+        {
+            new UserDAO().Delete(id);
+
+            return RedirectToAction("Index");
+        }
     }
 }
